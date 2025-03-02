@@ -1,20 +1,9 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router/stack';
 
-export default function RootLayout() {
+export default function Layout() {
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#f4511e"
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold"
-        }
-
-      }}>
-      {/* <Stack.Screen name="index" options={{ title: "Home" }} />
-      <Stack.Screen name="about" options={{ title: "About" }} /> */}
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }
