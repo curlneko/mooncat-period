@@ -9,6 +9,7 @@ export default function TabLayout() {
         options={{
           title: 'ホーム',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
+
         }}
       />
       <Tabs.Screen
@@ -16,6 +17,7 @@ export default function TabLayout() {
         options={{
           title: '生理を記録',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="plus" color={color} />,
+          headerShown: false
         }}
       />
       <Tabs.Screen
