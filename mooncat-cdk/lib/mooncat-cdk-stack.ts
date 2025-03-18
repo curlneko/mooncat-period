@@ -32,10 +32,6 @@ export class MooncatCdkStack extends cdk.Stack {
         name: "id",
         type: dynamodb.AttributeType.STRING,
       },
-      sortKey: {
-        name: "name",
-        type: dynamodb.AttributeType.STRING,
-      },
       removalPolicy: cdk.RemovalPolicy.DESTROY, // cdk destroyでDB削除可
     });
 
@@ -55,7 +51,7 @@ export class MooncatCdkStack extends cdk.Stack {
       fieldName: "getMoonCatUser",
       requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem(
         "id",
-        "id"
+        "id",
       ),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
     });
@@ -75,7 +71,10 @@ export class MooncatCdkStack extends cdk.Stack {
       typeName: "Mutation",
       fieldName: "updateMoonCatUser",
       requestMappingTemplate: appsync.MappingTemplate.dynamoDbPutItem(
-        appsync.PrimaryKey.partition("id").is("input.id").sort("name").is("input.name"),
+        appsync.PrimaryKey.partition("id")
+          .is("input.id")
+          .sort("name")
+          .is("input.name"),
         appsync.Values.projecting("input")
       ),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
@@ -90,6 +89,5 @@ export class MooncatCdkStack extends cdk.Stack {
       ),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
     });
- 
   }
 }

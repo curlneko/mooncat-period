@@ -1,27 +1,30 @@
 type MoonCatUser {
-  id: ID!
-  name: String!
-  birthday: String!
+  id: String!
+  name: String
+  birthday: String
+  email: String
 }
 
 type Query {
-  getMoonCatUser(id: ID!): MoonCatUser
+  getMoonCatUser(id: String!): MoonCatUser
   getMoonCatUsers: [MoonCatUser!]!
 }
 
 input MoonCatUserInput {
-  name: String!
-  birthday: String!
+  name: String
+  birthday: String
+  email: String
 }
 
 input UpdateMoonCatUserInput {
-  id: ID!
+  id: String!
   name: String
   birthday: String
+  email: String
 }
 
 type Mutation {
   addMoonCatUser(input: MoonCatUserInput!): MoonCatUser
   updateMoonCatUser(input: UpdateMoonCatUserInput!): MoonCatUser
-  deleteMoonCatUser(id: ID!): MoonCatUser
+  deleteMoonCatUser(id: String!): MoonCatUser
 }
