@@ -5,8 +5,6 @@ import path = require("path");
 
 import * as appsync from "aws-cdk-lib/aws-appsync";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as nodejs from "aws-cdk-lib/aws-lambda-nodejs";
 
 export class MooncatCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -32,6 +30,10 @@ export class MooncatCdkStack extends cdk.Stack {
         name: "id",
         type: dynamodb.AttributeType.STRING,
       },
+      sortKey: {
+        name: "name",
+        type: dynamodb.AttributeType.STRING,
+      },
       removalPolicy: cdk.RemovalPolicy.DESTROY, // cdk destroyでDB削除可
     });
 
@@ -49,10 +51,14 @@ export class MooncatCdkStack extends cdk.Stack {
     dataSource.createResolver("getMoonCatUserResolver", {
       typeName: "Query",
       fieldName: "getMoonCatUser",
-      requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem(
-        "id",
-        "id",
+      // requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem('id', 'id'),
+      // requestMappingTemplate: appsync.MappingTemplate.dynamoDbQuery(
+      //   appsync.KeyCondition.eq("id", "id")
+      // ),
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        path.join(__dirname, "../vtl/get_user.vtl")
       ),
+      // responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultList(),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
     });
 
