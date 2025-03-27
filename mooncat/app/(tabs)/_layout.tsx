@@ -21,10 +21,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="setting"
         options={{
           title: '設定',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
+          headerShown: false
         }}
       />
     </Tabs>

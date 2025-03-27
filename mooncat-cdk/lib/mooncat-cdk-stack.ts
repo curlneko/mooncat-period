@@ -14,7 +14,7 @@ export class MooncatCdkStack extends cdk.Stack {
     const api = new appsync.GraphqlApi(this, "Api", {
       name: "MoonCatUserApi",
       schema: appsync.SchemaFile.fromAsset(
-        path.join(__dirname, "../schemas/schema.graphql")
+        path.join(__dirname, "../schemas/user.graphql")
       ),
       authorizationConfig: {
         defaultAuthorization: {
@@ -30,10 +30,10 @@ export class MooncatCdkStack extends cdk.Stack {
         name: "id",
         type: dynamodb.AttributeType.STRING,
       },
-      sortKey: {
-        name: "name",
-        type: dynamodb.AttributeType.STRING,
-      },
+      // sortKey: {
+      //   name: "name",
+      //   type: dynamodb.AttributeType.STRING,
+      // },
       removalPolicy: cdk.RemovalPolicy.DESTROY, // cdk destroyでDB削除可
     });
 
@@ -51,13 +51,13 @@ export class MooncatCdkStack extends cdk.Stack {
     dataSource.createResolver("getMoonCatUserResolver", {
       typeName: "Query",
       fieldName: "getMoonCatUser",
-      // requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem('id', 'id'),
+      requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem('id', 'id'),
       // requestMappingTemplate: appsync.MappingTemplate.dynamoDbQuery(
       //   appsync.KeyCondition.eq("id", "id")
       // ),
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        path.join(__dirname, "../vtl/get_user.vtl")
-      ),
+      // requestMappingTemplate: appsync.MappingTemplate.fromFile(
+      //   path.join(__dirname, "../vtl/get_user.vtl")
+      // ),
       // responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultList(),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
     });
@@ -66,8 +66,12 @@ export class MooncatCdkStack extends cdk.Stack {
     dataSource.createResolver("addMoonCatUserResolver", {
       typeName: "Mutation",
       fieldName: "addMoonCatUser",
+      // requestMappingTemplate: appsync.MappingTemplate.dynamoDbPutItem(
+      //   appsync.PrimaryKey.partition("id").auto().sort("name").is("input.name"),
+      //   appsync.Values.projecting("input")
+      // ),
       requestMappingTemplate: appsync.MappingTemplate.dynamoDbPutItem(
-        appsync.PrimaryKey.partition("id").auto().sort("name").is("input.name"),
+        appsync.PrimaryKey.partition("id").auto(),
         appsync.Values.projecting("input")
       ),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
@@ -76,11 +80,15 @@ export class MooncatCdkStack extends cdk.Stack {
     dataSource.createResolver("updateMoonCatUserResolver", {
       typeName: "Mutation",
       fieldName: "updateMoonCatUser",
+      // requestMappingTemplate: appsync.MappingTemplate.dynamoDbPutItem(
+      //   appsync.PrimaryKey.partition("id")
+      //     .is("input.id")
+      //     .sort("name")
+      //     .is("input.name"),
+      //   appsync.Values.projecting("input")
+      // ),
       requestMappingTemplate: appsync.MappingTemplate.dynamoDbPutItem(
-        appsync.PrimaryKey.partition("id")
-          .is("input.id")
-          .sort("name")
-          .is("input.name"),
+        appsync.PrimaryKey.partition("id").is("input.id"),
         appsync.Values.projecting("input")
       ),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),

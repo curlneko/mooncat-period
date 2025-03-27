@@ -23,6 +23,8 @@ npm install react-native-vector-icons
 
 npm install dotenv
 
+npm install tailwindcss @tailwindcss/vite
+npm install twrnc
 
 # 機能要件
 ・カレンダーで生理を表示  

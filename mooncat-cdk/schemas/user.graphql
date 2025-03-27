@@ -1,12 +1,12 @@
 type MoonCatUser {
   id: String!
-  name: String!
+  name: String
   birthday: String
   email: String
 }
 
 type Query {
-  getMoonCatUser(id: String!, name: String): MoonCatUser
+  getMoonCatUser(id: String!): MoonCatUser
   getMoonCatUsers: [MoonCatUser!]!
 }
 
@@ -18,7 +18,7 @@ input MoonCatUserInput {
 
 input UpdateMoonCatUserInput {
   id: String!
-  name: String!
+  name: String
   birthday: String
   email: String
 }
