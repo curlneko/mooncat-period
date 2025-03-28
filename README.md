@@ -26,6 +26,9 @@ npm install dotenv
 npm install tailwindcss @tailwindcss/vite
 npm install twrnc
 
+npm install amazon-cognito-identity-js
+npm install react-native-get-random-values
+
 # 機能要件
 ・カレンダーで生理を表示  
 ・生理、症状、気分を入力するボタン  
