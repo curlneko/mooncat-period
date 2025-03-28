@@ -6,9 +6,19 @@ import path = require("path");
 import * as appsync from "aws-cdk-lib/aws-appsync";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
-export class MooncatCdkStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+import { CognitoStack } from './cognito-stack';
+
+export class UserStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps & {cognitoStack: CognitoStack}) {
     super(scope, id, props);
+
+    // props が undefined でないことを確認
+    if (!props || !props.cognitoStack) {
+      throw new Error('CognitoStack is required.');
+    }
+
+    // CognitoStack から userPool を受け取る
+    const userPool = props.cognitoStack.userPool;
 
     // appsync
     const api = new appsync.GraphqlApi(this, "Api", {
@@ -17,8 +27,14 @@ export class MooncatCdkStack extends cdk.Stack {
         path.join(__dirname, "../schemas/user.graphql")
       ),
       authorizationConfig: {
+        // defaultAuthorization: {
+        //   authorizationType: appsync.AuthorizationType.API_KEY,
+        // },
         defaultAuthorization: {
-          authorizationType: appsync.AuthorizationType.API_KEY,
+          authorizationType: appsync.AuthorizationType.USER_POOL,
+          userPoolConfig: {
+            userPool: userPool, // 先ほど作成した UserPool
+          },
         },
       },
     });
