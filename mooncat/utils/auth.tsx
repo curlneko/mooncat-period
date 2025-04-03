@@ -6,6 +6,8 @@ import {
     ICognitoUserPoolData,
 } from 'amazon-cognito-identity-js';
 
+import { jwtDecode } from "jwt-decode";
+
 const UserPoolId = process.env.EXPO_PUBLIC_USERPOOL_ID || '';
 const ClientId = process.env.EXPO_PUBLIC_CLIENT_ID || '';
 
@@ -53,7 +55,7 @@ export const signOut = (): Promise<void> => {
     });
 }
 
-export const signIn = (email: string, password: string): Promise<{ user: CognitoUser; session: any }> => {
+export const signIn = (email: string, password: string): Promise<{ user: CognitoUser; session: any, groups: string[] }> => {
     return new Promise((resolve, reject) => {
         const user = new CognitoUser({ Username: email, Pool: userPool });
         const authDetails = new AuthenticationDetails({ Username: email, Password: password });
@@ -63,10 +65,14 @@ export const signIn = (email: string, password: string): Promise<{ user: Cognito
                 const accessToken = session.getAccessToken().getJwtToken();
                 const idToken = session.getIdToken().getJwtToken();
 
+                const decodedToken: any = jwtDecode(idToken);
+                const groups: string[] = decodedToken["cognito:groups"] || [];
+
                 console.log('Access Token:', accessToken);
                 console.log('ID Token:', idToken);
+                console.log('Groups:', groups);
 
-                resolve({ user, session })
+                resolve({ user, session, groups })
             },
             onFailure: (err) => reject(err),
         });

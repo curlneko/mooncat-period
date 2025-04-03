@@ -26,8 +26,9 @@ export default function Tab() {
     setLoading(true);
 
     await signIn(email, password)
-      .then(({ user, session }) => {
+      .then(({ user, session, groups }) => {
         auth?.setUser(user);
+        auth?.setGroups(groups);
         router.replace("/(tabs)")
       }).catch((err) => {
         if (err.code === 'UserNotConfirmedException') {

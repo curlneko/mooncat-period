@@ -45,6 +45,20 @@ export class CognitoStack extends cdk.Stack {
       }
     );
 
+    const adminGroup = new cognito.CfnUserPoolGroup(this, "AdminGroup", {
+      groupName: "Admin",
+      userPoolId: this.userPool.userPoolId,
+      description: "管理者",
+      precedence: 1, // 優先度 (数値が小さい方が優先)
+    });
+
+    const userGroup = new cognito.CfnUserPoolGroup(this, "userGroup", {
+      groupName: "User",
+      userPoolId: this.userPool.userPoolId,
+      description: "一般ユーザー",
+      precedence: 10,
+    });
+
     // ユーザープールの ID とクライアント ID を出力
     new cdk.CfnOutput(this, "UserPoolId", {
       value: this.userPool.userPoolId,
