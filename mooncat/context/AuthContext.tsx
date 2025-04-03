@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             .catch(() => {
                 setIsAuthenticated(false);
             })
-    })
+    }, [])
 
     const logout = async () => {
         await signOut();
