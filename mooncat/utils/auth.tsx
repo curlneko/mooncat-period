@@ -5,8 +5,6 @@ import {
     CognitoUserAttribute,
     ICognitoUserPoolData,
 } from 'amazon-cognito-identity-js';
-import { assertInputObjectType } from 'graphql';
-
 
 const UserPoolId = process.env.EXPO_PUBLIC_USERPOOL_ID || '';
 const ClientId = process.env.EXPO_PUBLIC_CLIENT_ID || '';
@@ -41,14 +39,21 @@ export const signOut = (): Promise<void> => {
         const user = userPool.getCurrentUser();
 
         if (user) {
-            user.signOut();
+            user.globalSignOut(
+                {
+                    onSuccess: () => resolve(),
+                    onFailure: () => resolve(),
+                }
+            );
+        } else {
+            resolve();
         }
 
         resolve();
     });
 }
 
-export const signIn = (email: string, password: string): Promise<CognitoUser> => {
+export const signIn = (email: string, password: string): Promise<{ user: CognitoUser; session: any }> => {
     return new Promise((resolve, reject) => {
         const user = new CognitoUser({ Username: email, Pool: userPool });
         const authDetails = new AuthenticationDetails({ Username: email, Password: password });
@@ -61,14 +66,14 @@ export const signIn = (email: string, password: string): Promise<CognitoUser> =>
                 console.log('Access Token:', accessToken);
                 console.log('ID Token:', idToken);
 
-                resolve(user)
+                resolve({ user, session })
             },
             onFailure: (err) => reject(err),
         });
     });
 }
 
-export const signUp = (email: string, password: string): Promise<void> => {
+export const signUp = (email: string, password: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         const emailAttribute = new CognitoUserAttribute({
             Name: 'email',
@@ -83,7 +88,7 @@ export const signUp = (email: string, password: string): Promise<void> => {
                 reject(err);
             }
             console.log(result);
-            resolve();
+            resolve(result);
         });
     });
 }

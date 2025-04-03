@@ -26,7 +26,7 @@ export default function Tab() {
     setLoading(true);
 
     await signIn(email, password)
-      .then((user) => {
+      .then(({ user, session }) => {
         auth?.setUser(user);
         router.replace("/(tabs)")
       }).catch((err) => {
