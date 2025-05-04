@@ -8,7 +8,7 @@ import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 import { CognitoStack } from './cognito-stack';
 
-export class UserStack extends cdk.Stack {
+export class AppsyncStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps & {cognitoStack: CognitoStack}) {
     super(scope, id, props);
 
@@ -24,7 +24,7 @@ export class UserStack extends cdk.Stack {
     const api = new appsync.GraphqlApi(this, "Api", {
       name: "MoonCatUserApi",
       schema: appsync.SchemaFile.fromAsset(
-        path.join(__dirname, "../schemas/user.graphql")
+        path.join(__dirname, "../schemas/schema.graphql")
       ),
       authorizationConfig: {
         // defaultAuthorization: {
