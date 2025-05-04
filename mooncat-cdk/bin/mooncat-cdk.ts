@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { UserStack } from "../lib/user-stack";
+import { AppsyncStack } from "../lib/appsync-stack";
 import { CognitoStack  } from "../lib/cognito-stack";
 
 // 環境変数からアカウントとリージョンを取得
@@ -15,7 +15,7 @@ const app = new cdk.App();
 const cognitoStack = new CognitoStack(app, 'CognitoStack', {
   env, // env を渡す
 });
-new UserStack(app, "UserStack", {
+new AppsyncStack(app, "AppsyncStack", {
   cognitoStack: cognitoStack, // CognitoStack のインスタンスを渡す
   env, // env を渡す
 });

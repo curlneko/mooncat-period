@@ -1,0 +1,77 @@
+# 共通
+scalar Date
+
+# 生理症状の定義
+enum SymptomType {
+  CRAMPS # 腹痛
+  HEADACHE # 頭痛
+  NAUSEA # 吐き気
+  FATIGUE # 倦怠感
+  MOOD_SWINGS # 気分の変動
+  OTHER
+}
+
+# 生理量（定性的な記録）
+enum FlowLevel {
+  NONE
+  LIGHT
+  MEDIUM
+  HEAVY
+}
+
+# 症状（1日ごと）
+type Symptom {
+  type: SymptomType!
+  note: String
+}
+
+# 1日ごとの記録
+type DailyRecord {
+  date: Date!
+  flow: FlowLevel!
+  symptoms: [Symptom!]!
+}
+
+# 生理周期（開始日～終了日）
+type PeriodCycle {
+  id: ID!
+  userId: ID!
+  startDate: Date!
+  endDate: Date!
+  records: [DailyRecord!]!
+}
+
+# クエリ
+type Query {
+  getPeriodCycles(userId: ID!): [PeriodCycle!]!
+  getDailyRecord(userId: ID!, date: Date!): DailyRecord
+}
+
+# ミューテーション
+type Mutation {
+  createPeriodCycle(
+    userId: ID!
+    startDate: Date!
+    endDate: Date!
+    records: [DailyRecordInput!]!
+  ): PeriodCycle!
+
+  addOrUpdateDailyRecord(
+    userId: ID!
+    date: Date!
+    flow: FlowLevel!
+    symptoms: [SymptomInput!]!
+  ): DailyRecord!
+}
+
+# 入力型
+input SymptomInput {
+  type: SymptomType!
+  note: String
+}
+
+input DailyRecordInput {
+  date: Date!
+  flow: FlowLevel!
+  symptoms: [SymptomInput!]!
+}
