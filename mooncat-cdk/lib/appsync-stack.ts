@@ -20,7 +20,7 @@ export class AppsyncStack extends cdk.Stack {
     // CognitoStack から userPool を受け取る
     const userPool = props.cognitoStack.userPool;
 
-    // appsync
+    // appsyncの作成
     const api = new appsync.GraphqlApi(this, "Api", {
       name: "MoonCatUserApi",
       schema: appsync.SchemaFile.fromAsset(
@@ -39,7 +39,7 @@ export class AppsyncStack extends cdk.Stack {
       },
     });
 
-    // dynamodb
+    // userテーブル
     const table = new dynamodb.Table(this, "MooncatUserTable", {
       tableName: "mooncat-user",
       partitionKey: {
