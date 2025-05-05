@@ -11,10 +11,12 @@ const env = {
 
 const app = new cdk.App();
 
-// CognitoStack の作成
+// Cognitoの作成
 const cognitoStack = new CognitoStack(app, 'CognitoStack', {
   env, // env を渡す
 });
+
+// Appsyncの作成
 new AppsyncStack(app, "AppsyncStack", {
   cognitoStack: cognitoStack, // CognitoStack のインスタンスを渡す
   env, // env を渡す
